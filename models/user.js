@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 
 const MAILREGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const today = new Date()
+const eighteenYearsAgo = today.setFullYear(today.getFullYear()-18);
 const userSchema = mongoose.Schema({
   fname: {
     type: String,
@@ -38,6 +40,7 @@ const userSchema = mongoose.Schema({
   "birth date": {
     type: Date,
     required: true,
+    max: [eighteenYearsAgo.toString(), 'your are too young']
   },
   verified: Boolean,
   savedAt: Date,
