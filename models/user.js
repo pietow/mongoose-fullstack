@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+const MAILREGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const userSchema = mongoose.Schema({
   fname: {
     type: String,
@@ -21,10 +22,14 @@ const userSchema = mongoose.Schema({
   },
   email: {
     type: String,
-    minLength: [2, "name is too short"],
-    maxLength: [50, "too long"],
     required: true,
     unique: true,
+    validate: {
+      validator: function (v) {
+        return MAILREGEX.test(v);
+      },
+      message: props => `${props.value} is not a valid email`
+    },
   },
   password: {
     type: String,
