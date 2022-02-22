@@ -29,12 +29,13 @@ const postRegister = (req, res) => {
         lname,
         user,
         email,
+        password: await encrypt(password),
         "birth date": new Date(date),
         verified: false,
         savedAt: new Date(),
       });
       console.log(userItem);
-      userItem.password = await encrypt(password);
+      /* userItem.password = await encrypt(password); */
       userItem.save((e) => {
         if (e) {
           if (e.code) {
