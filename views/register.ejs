@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalog-Z Contact page</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="css/templatemo-style.css">
+<!--
+    
+TemplateMo 556 Catalog-Z
+
+https://templatemo.com/tm-556-catalog-z
+
+-->
+</head>
+<body>
+    <!-- Page Loader -->
+    <div id="loader-wrapper">
+        <div id="loader"></div>
+
+        <div class="loader-section section-left"></div>
+        <div class="loader-section section-right"></div>
+
+    </div>
+    <!-- navigation start -->
+    <%- include('partials/navigation.ejs', {page: 'register'}) %>
+    <!-- navigation end -->
+
+    <div class="tm-hero d-flex justify-content-center align-items-center" data-parallax="scroll" data-image-src="img/hero.jpg"></div>
+
+    <div class="container-fluid tm-mt-60">
+        <div class="row tm-mb-50">
+            <div class="col-lg-12 col-12 mb-5 mx-auto">
+                <h2 class="tm-text-primary mb-5 text-center">Registration Page</h2>
+                <form id="contact-form" action="" method="POST" class="tm-contact-form mx-auto">
+                    <div class="form-group">
+                        <input id="fname" type="text" name="fname" class="form-control rounded-0" placeholder="First Name" required />
+                    </div>
+                    <div class="form-group">
+                        <input id="lname" type="text" name="lname" class="form-control rounded-0" placeholder="Last Name" required />
+                    </div>
+                    <div class="form-group">
+                        <input id="user" type="text" name="username" class="form-control rounded-0" placeholder="Username" required />
+                    </div>
+                    <div class="form-group">
+                        <input id="email" type="email" name="email" class="form-control rounded-0" placeholder="Email" required />
+                    </div>
+                    <div class="form-group">
+                      <input id="password" type="password" name="" class="form-control rounded-0" placeholder="Password" required />
+                    </div>
+                    <div class="form-group">
+                      <input id="repassword" type="password" name="repassword" class="form-control rounded-0" placeholder="Re-Password" required />
+                    </div>
+                    <div class="form-group">
+                      <input id="date" type="date" name="date" class="form-control rounded-0" placeholder="Re-Password" required />
+                    </div>
+                    <div class="form-group tm-text-right">
+                        <button id="submit-button" type="submit" class="btn btn-primary">Send</button>
+                    </div>
+                    <div id="message" class="visually-hidden form-group bg-success tm-text-right rounded-2 text-dark">
+                        <p class="text-dark p-2">Bla</p>
+                    </div>
+                </form>                
+            </div>
+        </div>
+    </div> <!-- container-fluid, tm-container-content -->
+
+    <!-- footer start -->
+    <%- include('partials/footer.ejs') %>
+    <!-- footer end -->
+    
+    <script src="js/plugins.js"></script>
+    <script>
+        $(window).on("load", function() {
+            $('body').addClass('loaded');
+        });
+
+        const fname = document.querySelector('#fname');
+        const lname = document.querySelector('#lname');
+        const user = document.querySelector('#user');
+        const email = document.querySelector('#email');
+        const password = document.querySelector('#password');
+        const repassword = document.querySelector('#repassword');
+        const date = document.querySelector('#date');
+        const submitButton = document.querySelector('#submit-button');
+
+        // add click event to submit button
+        submitButton.addEventListener('click', async (e) => {
+            // tp prevent the page to be reloaded on button click
+            e.preventDefault();
+
+            const data = {
+            fname: fname.value,
+            lname: lname.value,
+            user: user.value,
+            email: email.value,
+            password: password.value,
+            repassword: repassword.value,
+            date: date.value
+        }
+        // send data using GET request
+        // www.ff.com/?name=ahmad&email=sss@ff.com&
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json' 
+                    },
+                    body: JSON.stringify(data)
+                });
+                const answer = await response.json()
+                // deal with the answer
+                const message = document.querySelector('#message');
+                if(answer.result === 'ok') {
+                    message.classList.remove('visually-hidden')
+                    message.classList.remove('bg-danger')
+                    message.classList.add('bg-success')
+                    console.log(message.firstElementChild)
+                    const text = message.firstElementChild
+                    text.textContent = 'Login successful'  
+                } else {
+                    message.classList.remove('visually-hidden')
+                    message.classList.remove('bg-success')
+                    message.classList.add('bg-danger')
+                    const text = message.firstElementChild
+                    text.textContent = answer.result 
+                  }
+
+            } catch (error) {
+                console.log(error);
+            }
+        })
+    
+
+    </script>
+</body>
+</html>

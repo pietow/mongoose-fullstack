@@ -1,6 +1,7 @@
 const express = require('express');
 require('dotenv').config();
 const path = require('path');
+require('./db')
 
 //get router
 const router = require('./routers/index')
