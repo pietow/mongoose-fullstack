@@ -1,5 +1,6 @@
 // import emailSender
-const emailSender = require("./emailSender");
+/* const emailSender = require("./emailSender"); */
+const emailService = require('../lib/email')()
 const User = require("../models/user.js");
 const encrypt = require("../lib/encrypt");
 
@@ -20,6 +21,10 @@ const getRegister = (req, res) => {
 };
 const postRegister = (req, res) => {
   const { fname, lname, user, email, password, repassword, date } = req.body;
+  console.log(email)
+  console.log('calling sendgrid')
+  emailService.send('bla', email, 'test', 'bla')
+  console.log('sending email...')
 
   if (password === repassword) {
     User.find(async (err, users) => {
@@ -30,12 +35,11 @@ const postRegister = (req, res) => {
         user,
         email,
         password: await encrypt(password),
-        "birth date": new Date(date),
+        birthDate: new Date(date),
         verified: false,
         savedAt: new Date(),
       });
-      console.log(userItem);
-      /* userItem.password = await encrypt(password); */
+      /* console.log(userItem); */
       userItem.save((e) => {
         if (e) {
           if (e.code) {
