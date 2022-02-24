@@ -37,7 +37,7 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  "birth date": {
+  birthDate: {
     type: Date,
     required: true,
     max: [eighteenYearsAgo.toString(), 'your are too young']

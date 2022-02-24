@@ -29,7 +29,7 @@ User.find((err, users) => {
         user: "aded",
         email: "pp@poste.de",
         password: 1234,
-        "birth date": new Date(1986, 4, 26, 20),
+        birthDate: new Date(1986, 4, 26, 20),
         verified: false,
       }).save()
     )
