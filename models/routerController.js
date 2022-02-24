@@ -1,6 +1,6 @@
 // import emailSender
 /* const emailSender = require("./emailSender"); */
-const emailService = require('../lib/email')()
+const emailService = require("../lib/email")();
 const User = require("../models/user.js");
 const encrypt = require("../lib/encrypt");
 
@@ -21,10 +21,7 @@ const getRegister = (req, res) => {
 };
 const postRegister = (req, res) => {
   const { fname, lname, user, email, password, repassword, date } = req.body;
-  console.log(email)
-  console.log('calling sendgrid')
-  emailService.send('bla', email, 'test', 'bla')
-  console.log('sending email...')
+  console.log(email);
 
   if (password === repassword) {
     User.find(async (err, users) => {
@@ -39,8 +36,7 @@ const postRegister = (req, res) => {
         verified: false,
         savedAt: new Date(),
       });
-      /* console.log(userItem); */
-      userItem.save((e) => {
+      userItem.save((e, user) => {
         if (e) {
           if (e.code) {
             res.json({ result: "DB Error: " + e.code });
@@ -49,11 +45,36 @@ const postRegister = (req, res) => {
             res.json({ result: e.errors[key].message });
           }
         } else {
+          const userId = user._id.toString();
+          console.log("calling sendgrid");
+          emailService.send(
+            fname,
+            email,
+            "Verify",
+            `<a href="http://localhost:5500/verify/${userId}">Verify</a>`
+          );
+          console.log("sending email...");
           res.json({ result: "ok" });
         }
       });
     });
   }
+};
+
+const getVerify = (req, res) => {
+  const userId = req.params.id;
+  User.findByIdAndUpdate(
+    userId,
+    { verified: true },
+    { new: true, runValidators: true, select: "verified" }
+  )
+    .then((user) => {
+      console.log(user);
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+  res.send("Thank you! Your Account has been verified!");
 };
 
 const getVideos = (req, res) => {
@@ -81,4 +102,5 @@ module.exports = {
   postRegister,
   postContact,
   getVideos,
+  getVerify,
 };
